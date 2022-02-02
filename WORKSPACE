@@ -1,27 +1,113 @@
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+workspace(name = "build_stack_rules_proto")
 
-# protobuf dependencies for C++ and Java
-http_archive(
-    name = "com_google_protobuf",
-    sha256 = "6aff9834fd7c540875e1836967c8d14c6897e3785a2efac629f69860fb7834ff",
-    strip_prefix = "protobuf-3.15.0",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.15.0.tar.gz"],
+# gazelle:repo bazel_gazelle
+
+# ----------------------------------------------------
+# Toolchain-Related
+# ----------------------------------------------------
+
+register_toolchains("//toolchain:standard")
+
+# ----------------------------------------------------
+# Top-Level Dependency Trees
+# ----------------------------------------------------
+
+load("//deps:core_deps.bzl", "core_deps")
+
+core_deps()
+
+load("//deps:protobuf_core_deps.bzl", "protobuf_core_deps")
+
+protobuf_core_deps()
+
+load("//deps:prebuilt_protoc_deps.bzl", "prebuilt_protoc_deps")
+
+prebuilt_protoc_deps()
+
+load("//deps:grpc_core_deps.bzl", "grpc_core_deps")
+
+grpc_core_deps()
+
+load("//deps:grpc_java_deps.bzl", "grpc_java_deps")
+
+grpc_java_deps()
+
+
+# ----------------------------------------------------
+# Go Tools
+# ----------------------------------------------------
+
+load(
+    "@io_bazel_rules_go//go:deps.bzl",
+    "go_register_toolchains",
+    "go_rules_dependencies",
 )
-# end protobuf dependencies for C++ and Java
 
-load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
-protobuf_deps()
+go_rules_dependencies()
 
-# rules_proto defines abstract rules for building Protocol Buffers.
-http_archive(
-    name = "rules_proto",
-    sha256 = "66bfdf8782796239d3875d37e7de19b1d94301e8972b3cbd2446b332429b4df1",
-    strip_prefix = "rules_proto-4.0.0",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/refs/tags/4.0.0.tar.gz",
-        "https://github.com/bazelbuild/rules_proto/archive/refs/tags/4.0.0.tar.gz",
+go_register_toolchains(version = "1.16.2")
+
+# ----------------------------------------------------
+# Gazelle
+# ----------------------------------------------------
+
+load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
+
+gazelle_dependencies()
+
+load("//:go_deps.bzl", "go_deps")
+
+# gazelle:repository_macro go_deps.bzl%go_deps
+go_deps()
+
+# ----------------------------------------------------
+# Core gRPC
+# ----------------------------------------------------
+
+load(
+    "@com_github_grpc_grpc//bazel:grpc_deps.bzl",
+    "grpc_deps",
+)
+
+grpc_deps()
+
+# ----------------------------------------------------
+# Java
+# ----------------------------------------------------
+
+load(
+    "@rules_jvm_external//:defs.bzl",
+    "maven_install",
+)
+load(
+    "@io_grpc_grpc_java//:repositories.bzl",
+    "IO_GRPC_GRPC_JAVA_ARTIFACTS",
+    "IO_GRPC_GRPC_JAVA_OVERRIDE_TARGETS",
+    "grpc_java_repositories",
+)
+
+maven_install(
+    artifacts = IO_GRPC_GRPC_JAVA_ARTIFACTS,
+    generate_compat_repositories = True,
+    override_targets = IO_GRPC_GRPC_JAVA_OVERRIDE_TARGETS,
+    repositories = [
+        "https://repo.maven.apache.org/maven2/",
     ],
 )
-load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
-rules_proto_dependencies()
-rules_proto_toolchains()
+
+load(
+    "@maven//:compat.bzl",
+    "compat_repositories",
+)
+
+compat_repositories()
+
+grpc_java_repositories()
+
+# ----------------------------------------------------
+# Golang
+# ----------------------------------------------------
+
+load("//deps:go_core_deps.bzl", "go_core_deps")
+
+go_core_deps()
