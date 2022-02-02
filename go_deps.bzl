@@ -258,7 +258,7 @@ def go_deps():
         build_file_proto_mode = "disable_global",
         importpath = "gopkg.in/yaml.v2",
         sum = "h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=",
-        version = "v2.2.2",
+        version = "v2.2.8",
     )
 
     go_repository(
