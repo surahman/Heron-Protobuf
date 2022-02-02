@@ -1,0 +1,131 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@build_stack_rules_proto//rules/cc:proto_cc_library.bzl", "proto_cc_library")
+load("@build_stack_rules_proto//rules/java:proto_java_library.bzl", "proto_java_library")
+load("@build_stack_rules_proto//rules/py:proto_py_library.bzl", "proto_py_library")
+load("@build_stack_rules_proto//rules:proto_compile.bzl", "proto_compile")
+
+proto_library(
+    name = "heron_proto_system_proto",
+    srcs = [
+        "common.proto",
+        "execution_state.proto",
+        "metrics.proto",
+        "packing_plan.proto",
+        "physical_plan.proto",
+        "stats.proto",
+        "tuple.proto",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto/api:heron_proto_api_proto",
+        "//proto/tmanager:heron_proto_tmanager_proto",
+    ],
+)
+
+proto_cc_library(
+    name = "heron_proto_system_cc_library",
+    srcs = [
+        "common.pb.cc",
+        "execution_state.pb.cc",
+        "metrics.pb.cc",
+        "packing_plan.pb.cc",
+        "physical_plan.pb.cc",
+        "stats.pb.cc",
+        "tuple.pb.cc",
+    ],
+    hdrs = [
+        "common.pb.h",
+        "execution_state.pb.h",
+        "metrics.pb.h",
+        "packing_plan.pb.h",
+        "physical_plan.pb.h",
+        "stats.pb.h",
+        "tuple.pb.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto/api:heron_proto_api_cc_library",
+        "//proto/tmanager:heron_proto_tmanager_cc_library",
+        "@com_google_protobuf//:protobuf",
+    ],
+)
+
+proto_compile(
+    name = "heron_proto_system_cpp_compile",
+    outputs = [
+        "common.pb.cc",
+        "common.pb.h",
+        "execution_state.pb.cc",
+        "execution_state.pb.h",
+        "metrics.pb.cc",
+        "metrics.pb.h",
+        "packing_plan.pb.cc",
+        "packing_plan.pb.h",
+        "physical_plan.pb.cc",
+        "physical_plan.pb.h",
+        "stats.pb.cc",
+        "stats.pb.h",
+        "tuple.pb.cc",
+        "tuple.pb.h",
+    ],
+    plugins = ["@build_stack_rules_proto//plugin/builtin:cpp"],
+    proto = "heron_proto_system_proto",
+)
+
+proto_compile(
+    name = "heron_proto_system_java_compile",
+    outs = {"@build_stack_rules_proto//plugin/builtin:java": "proto/system/heron_proto_system.srcjar"},
+    outputs = ["heron_proto_system.srcjar"],
+    plugins = ["@build_stack_rules_proto//plugin/builtin:java"],
+    proto = "heron_proto_system_proto",
+)
+
+proto_java_library(
+    name = "heron_proto_system_java_library",
+    srcs = ["heron_proto_system.srcjar"],
+    visibility = ["//visibility:public"],
+    exports = [
+        "//proto/api:heron_proto_api_java_library",
+        "//proto/tmanager:heron_proto_tmanager_java_library",
+        "@com_google_protobuf//:protobuf_java",
+    ],
+    deps = [
+        "//proto/api:heron_proto_api_java_library",
+        "//proto/tmanager:heron_proto_tmanager_java_library",
+        "@com_google_protobuf//:protobuf_java",
+    ],
+)
+
+proto_compile(
+    name = "heron_proto_system_python_compile",
+    outputs = [
+        "common_pb2.py",
+        "execution_state_pb2.py",
+        "metrics_pb2.py",
+        "packing_plan_pb2.py",
+        "physical_plan_pb2.py",
+        "stats_pb2.py",
+        "tuple_pb2.py",
+    ],
+    plugins = ["@build_stack_rules_proto//plugin/builtin:python"],
+    proto = "heron_proto_system_proto",
+)
+
+proto_py_library(
+    name = "heron_proto_system_py_library",
+    srcs = [
+        "common_pb2.py",
+        "execution_state_pb2.py",
+        "metrics_pb2.py",
+        "packing_plan_pb2.py",
+        "physical_plan_pb2.py",
+        "stats_pb2.py",
+        "tuple_pb2.py",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto/api:heron_proto_api_py_library",
+        "//proto/tmanager:heron_proto_tmanager_py_library",
+        "@com_google_protobuf//:protobuf_python",
+    ],
+)

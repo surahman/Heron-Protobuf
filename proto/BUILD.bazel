@@ -46,4 +46,3 @@
 # gazelle:proto_language python rule proto_compile
 # gazelle:proto_language python rule proto_python_library
 # gazelle:proto_language python rule grpc_py_library
-

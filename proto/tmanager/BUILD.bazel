@@ -1,0 +1,72 @@
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@build_stack_rules_proto//rules/cc:proto_cc_library.bzl", "proto_cc_library")
+load("@build_stack_rules_proto//rules/java:proto_java_library.bzl", "proto_java_library")
+load("@build_stack_rules_proto//rules/py:proto_py_library.bzl", "proto_py_library")
+load("@build_stack_rules_proto//rules:proto_compile.bzl", "proto_compile")
+
+proto_library(
+    name = "heron_proto_tmanager_proto",
+    srcs = ["tmanager.proto"],
+    visibility = ["//visibility:public"],
+    deps = ["//proto/system:heron_proto_system_proto"],
+)
+
+proto_cc_library(
+    name = "heron_proto_tmanager_cc_library",
+    srcs = ["tmanager.pb.cc"],
+    hdrs = ["tmanager.pb.h"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto/system:heron_proto_system_cc_library",
+        "@com_google_protobuf//:protobuf",
+    ],
+)
+
+proto_compile(
+    name = "heron_proto_tmanager_cpp_compile",
+    outputs = [
+        "tmanager.pb.cc",
+        "tmanager.pb.h",
+    ],
+    plugins = ["@build_stack_rules_proto//plugin/builtin:cpp"],
+    proto = "heron_proto_tmanager_proto",
+)
+
+proto_compile(
+    name = "heron_proto_tmanager_java_compile",
+    outs = {"@build_stack_rules_proto//plugin/builtin:java": "proto/tmanager/heron_proto_tmanager.srcjar"},
+    outputs = ["heron_proto_tmanager.srcjar"],
+    plugins = ["@build_stack_rules_proto//plugin/builtin:java"],
+    proto = "heron_proto_tmanager_proto",
+)
+
+proto_java_library(
+    name = "heron_proto_tmanager_java_library",
+    srcs = ["heron_proto_tmanager.srcjar"],
+    visibility = ["//visibility:public"],
+    exports = [
+        "//proto/system:heron_proto_system_java_library",
+        "@com_google_protobuf//:protobuf_java",
+    ],
+    deps = [
+        "//proto/system:heron_proto_system_java_library",
+        "@com_google_protobuf//:protobuf_java",
+    ],
+)
+
+proto_compile(
+    name = "heron_proto_tmanager_python_compile",
+    outputs = ["tmanager_pb2.py"],
+    plugins = ["@build_stack_rules_proto//plugin/builtin:python"],
+    proto = "heron_proto_tmanager_proto",
+)
+
+proto_py_library(
+    name = "heron_proto_tmanager_py_library",
+    srcs = ["tmanager_pb2.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto/system:heron_proto_system_py_library",
+        "@com_google_protobuf//:protobuf_python",
+    ],
+)
