@@ -21,9 +21,9 @@ package heron.proto.tmanager;
 option java_package = "org.apache.heron.proto.tmanager";
 option java_outer_classname = "TopologyManager";
 
-import "common.proto";
-import "stats.proto";
-import "physical_plan.proto";
+import "proto/system/common.proto";
+import "proto/system/stats.proto";
+import "proto/system/physical_plan.proto";
 
 message TManagerLocation {
   required string topology_name = 1;

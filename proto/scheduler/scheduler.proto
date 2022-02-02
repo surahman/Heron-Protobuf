@@ -21,8 +21,8 @@ package heron.proto.scheduler;
 option java_package = "org.apache.heron.proto.scheduler";
 option java_outer_classname = "Scheduler";
 
-import "common.proto";
-import "packing_plan.proto";
+import "proto/system/common.proto";
+import "proto/system/packing_plan.proto";
 
 message SchedulerLocation {
   required string topology_name = 1;

@@ -21,7 +21,7 @@ package heron.proto.system;
 option java_package = "org.apache.heron.proto.system";
 option java_outer_classname = "HeronTuples";
 
-import "topology.proto";
+import "proto/api/topology.proto";
 
 message RootId {
   required int32 taskid = 1;

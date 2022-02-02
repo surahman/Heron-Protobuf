@@ -21,8 +21,8 @@ package heron.proto.system;
 option java_package = "org.apache.heron.proto.system";
 option java_outer_classname = "Metrics";
 
-import "common.proto";
-import "tmanager.proto";
+import "proto/system/common.proto";
+import "proto/tmanager/tmanager.proto";
 
 // This file defines the various protocol buffers needed
 // for sending metrics from all the system components(workers,
